@@ -70,3 +70,14 @@ h1 {
     object-fit: cover;
     border-radius: 5px;
 }
+
+.recipe-details {
+    margin-top: 20px;
+}
+
+.recipe-details img {
+    width: 100%;
+    max-width: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}

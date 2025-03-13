@@ -8,12 +8,18 @@ form.addEventListener('submit', function (event) {
 
     searchRecipes(inputValue);
 });
-
 async function searchRecipes(ingredient) {
-    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`)
-    const data = await response.json()
+    recipeList.innerHTML = `<p>Carregando receitas...</p>`
 
-    showRecipes(data.meals);
+    try {
+            const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingredient}`)
+            const data = await response.json()
+    
+            showRecipes(data.meals);
+        
+    } catch(err) {
+            recipeList.innerHTML = `<p>Nenhuma receita encontrada</p>`
+    }
 };
 
 
@@ -33,10 +39,12 @@ async function getRecipesDetails(id) {
     const data = await response.json()
     const recipe = data.meals[0]
 
+    console.log(recipe)
+
     let ingredients = ''
 
     for(let i = 1; i<= 20; i++){
-        if(recipe[`strIngredient1${i}`]) {
+        if(recipe[`strIngredient${i}`]) {
             ingredients += `<li>${recipe[`strIngredient${i}`]} - ${recipe[`strMeasure${i}`]}</li>`
 
         } else {
@@ -45,18 +53,19 @@ async function getRecipesDetails(id) {
     }
 
     recipeDetails.innerHTML = `
-    <h2 ${recipe.strMeal}></h2>
-    <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}" class="recipe-img">
+    <h2>${recipe.strMeal}</h2>
+    <img src="${recipe.strMealThumb}" alt="${recipe.strMeal}">
     <h3>Categoria: ${recipe.strCategory}</h3>
     <h3>Origem: ${recipe.strArea}</h3>
     <h3>ingredientes:</h3>
     <ul>${ingredients}</ul>
     <h3>Instruções:</h3>
     <h3>${recipe.strInstructions}</h3>
-    <p>${recipe.strTags}</p>
-    <p>Video: <a href="${strYoutube}" target="_blank"></a></p>
+    <p>Tags: ${recipe.strTags}</p>
+    <p>Video: <a href="${recipe.strYoutube}" target="_blank">Tutorial no YouTube</a></p>
     
     
     
     `
 }
+
